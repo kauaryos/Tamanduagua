@@ -12,6 +12,7 @@ public class Janela extends JFrame {
         super("Tamanduagua");
         setSize(300, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
 
         GifPanel gifPanel = new GifPanel("/home/kaua/Documentos/Projetos/tamanduagua-main/src/Icon_img/ele.gif");
         gifPanel.setBounds(52, 10, 200, 200); // Posição e tamanho do quadrado

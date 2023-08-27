@@ -1,6 +1,6 @@
 import ML.Agir;
 import ML.GifPanel;
-
+import java.awt.*;
 import javax.swing.*;
 
 public class Janela extends JFrame {
@@ -9,12 +9,19 @@ public class Janela extends JFrame {
     private final Agir instanciaAgir;
 
     public Janela() {
-        super("Tamanduagua");
+        super("Tamanduágua");
         setSize(300, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        GifPanel gifPanel = new GifPanel("/home/kaua/Documentos/Projetos/tamanduagua-main/src/Icon_img/ele.gif");
+        JButton aboutButton = new JButton("SOBRE");
+        Font smallerFont = aboutButton.getFont().deriveFont(10.0f);
+        aboutButton.setFont(smallerFont);
+        aboutButton.setBounds(45, 255, 40, 70);
+        add(aboutButton);
+
+
+        GifPanel gifPanel = new GifPanel("/home/kaua/IdeaProjects/tamanduagua/src/Icon_img/ele.gif");
         gifPanel.setBounds(52, 10, 200, 200); // Posição e tamanho do quadrado
         add(gifPanel);
 
@@ -42,12 +49,21 @@ public class Janela extends JFrame {
             }
         });
 
+        aboutButton.addActionListener(e -> {
+            exibirInformacoesSobre(); // Chamando o método exibirInformacoesSobre()
+        });
+
         setLayout(null);
     }
 
     private void updateTotalWaterLabel() {
         int totalWaterConsumed = instanciaAgir.getTotalAguaConsumida();
         totalWaterLabel.setText("Total de água bebida: " + totalWaterConsumed + " ml");
+    }
+
+    private void exibirInformacoesSobre() {
+        String informacoesSobre = "Desenvolvido por: Kauã Ryos\nVersão: 1.0\nAno: 2023";
+        JOptionPane.showMessageDialog(this, informacoesSobre, "Sobre", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {

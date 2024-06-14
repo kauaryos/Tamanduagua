@@ -1,0 +1,77 @@
+import tkinter as tk
+from tkinter import messagebox
+from PIL import Image, ImageTk, ImageSequence
+
+class Janela(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("Tamanduágua")
+        self.geometry("300x400")
+        self.resizable(False, False)
+
+        self.caixaTexto = tk.Entry(self)
+        self.caixaTexto.place(x=105, y=255, width=90, height=25)
+
+        self.totalWaterLabel = tk.Label(self, text="Total de água bebida: 0 ml")
+        self.totalWaterLabel.place(x=2, y=209, width=300, height=40)
+
+        self.instanciaAgir = Agir()
+
+        self.botao = tk.Button(self, text="Beber", command=self.beber_agua)
+        self.botao.place(x=105, y=300, width=90, height=25)
+
+        self.aboutButton = tk.Button(self, text="SOBRE", font=("Helvetica", 10), command=self.exibirInformacoesSobre)
+        self.aboutButton.place(x=35, y=255, width=60, height=70)
+
+        self.gif_panel = GifPanel(self, "./src/Icon_img/ele.gif")
+        self.gif_panel.place(x=52, y=10, width=200, height=200)
+
+    def beber_agua(self):
+        try:
+            ml = int(self.caixaTexto.get())
+            self.instanciaAgir.registrarAgua(ml)
+            self.updateTotalWaterLabel()
+        except ValueError:
+            messagebox.showerror("Erro", "Digite um número válido de água,\nseu desidratado.")
+
+    def updateTotalWaterLabel(self):
+        totalWaterConsumed = self.instanciaAgir.getTotalAguaConsumida()
+        self.totalWaterLabel.config(text=f"Total de água bebida: {totalWaterConsumed} ml")
+
+    def exibirInformacoesSobre(self):
+        informacoesSobre = "Desenvolvido por: Kauã Ryos\nVersão: 1.0\nAno: 2023"
+        messagebox.showinfo("Sobre", informacoesSobre)
+
+class Agir:
+    def __init__(self):
+        self.totalAgua = 0
+
+    def registrarAgua(self, ml):
+        self.totalAgua += ml
+
+    def getTotalAguaConsumida(self):
+        return self.totalAgua
+
+class GifPanel(tk.Label):
+    def __init__(self, parent, gif_path):
+        super().__init__(parent)
+        self.gif_path = gif_path
+        self.frames = self.load_gif_frames(gif_path)
+        self.index = 0
+        self.update_gif()
+
+    def load_gif_frames(self, gif_path):
+        gif = Image.open(gif_path)
+        frames = [ImageTk.PhotoImage(frame.copy().convert("RGBA")) for frame in ImageSequence.Iterator(gif)]
+        return frames
+
+    def update_gif(self):
+        frame = self.frames[self.index]
+        self.config(image=frame)
+        self.index = (self.index + 1) % len(self.frames)
+        self.after(50, self.update_gif)  # Ajuste a velocidade do GIF aqui
+
+if __name__ == "__main__":
+    app = Janela()
+    app.mainloop()
